@@ -48,4 +48,3 @@ class CacheControllerTest {
         verify(cache, times(1)).clear();
     }
 }
-git
