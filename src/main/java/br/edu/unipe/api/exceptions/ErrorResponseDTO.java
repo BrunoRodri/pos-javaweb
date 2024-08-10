@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 @Data
 public class ErrorResponseDTO {
 
-    private String error;
-    private String message;
-    private LocalDateTime timestamp = LocalDateTime.now();;
-    private String details;
+    private final String error;
+    private final String message;
+    private final LocalDateTime timestamp = LocalDateTime.now();
+    private final String details;
 
     public ErrorResponseDTO(String error, String message, String details){
         this.error = error;

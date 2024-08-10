@@ -1,5 +1,6 @@
 package br.edu.unipe.api.service;
 
+import br.edu.unipe.api.exceptions.ResourceNotFoundException;
 import br.edu.unipe.api.model.Usuario;
 import br.edu.unipe.api.model.dto.UsuarioDTO;
 import br.edu.unipe.api.repository.UsuarioRepository;
@@ -48,14 +49,14 @@ public class UsuarioService {
     public Usuario buscarPorEmail(String email){
         var usuario = repository.buscarPorEmail(email);
         if(Objects.isNull(usuario))
-            throw new RuntimeException("Email não localizado " +email);
+            throw new ResourceNotFoundException("Email não localizado " +email);
 
         return usuario;
     }
 
     private void validarExistenciaId(Integer id){
         if(Objects.isNull(id) || !repository.existsById(id)){
-            throw new RuntimeException("Usuário não existe para o id "+id);
+            throw new ResourceNotFoundException("Usuário não existe para o id "+id);
         }
     }
 
