@@ -2,6 +2,7 @@ package br.edu.unipe.api.controller;
 
 import br.edu.unipe.api.model.Usuario;
 import br.edu.unipe.api.repository.UsuarioRepository;
+import br.edu.unipe.api.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -15,47 +16,42 @@ import java.util.Objects;
 @RequestMapping("/usuario")
 public class UsuarioController {
 
-    private final UsuarioRepository repository;
+    private final UsuarioService service;
 
     @GetMapping
     public List<Usuario> listar(){
         log.info("Listando Usuarios");
-        return repository.findAll();
+        return service.listarUsuarios();
     }
 
     @GetMapping("/{id}")
-    public Usuario  getUsuario(@PathVariable int id){
+    public Usuario  consultarPorId(@PathVariable int id){
         log.info("Inicio - Consulta usuário id {} " , id);
-        var usuario = repository.findById(id).get();
+        var usuario = service.consultar(id);
         log.info("Fim  - Consulta usuário id {} " , id);
         return usuario;
     }
 
     @GetMapping("/email/{email}")
     public Usuario  getUsuarioPorEmail(@PathVariable String  email){
-        var usuario = repository.buscarPorEmail(email);
+        var usuario = service.buscarPorEmail(email);
         return usuario;
     }
 
     @PostMapping
-    public Usuario postUsuario(@RequestBody Usuario usuario){
-        usuario = repository.save(usuario);
+    public Usuario salvar(@RequestBody Usuario usuario){
+        usuario = service.salvar(usuario);
         return usuario;
     }
 
     @PutMapping
-    public Usuario putUsuario(@RequestBody Usuario usuario){
-        if(Objects.isNull(usuario.getId())){
-            throw new RuntimeException("ID não é válido");
-        }else if(!repository.existsById(usuario.getId())){
-            throw new RuntimeException("ID não encontrado");
-        }
-        return repository.save(usuario);
+    public Usuario atualizar(@RequestBody Usuario usuario){
+        return service.alterar(usuario);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUsuario(@PathVariable Integer id){
-        repository.deleteById(id);
+        service.deletar(id);
     }
 
 }

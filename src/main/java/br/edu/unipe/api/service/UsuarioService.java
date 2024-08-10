@@ -24,17 +24,14 @@ public class UsuarioService {
         return repository.save(usuario);
     }
 
-    public Usuario alterar(Usuario usuario){
+    public Usuario consultar(Integer id){
+        validarExistenciaId(id);
+        return repository.findById(id).get();
+    }
 
-        if(Objects.nonNull(usuario.getId())){
-             var user = repository.findById(usuario.getId());
-             if(user.isPresent()){
-                 usuario = repository.save(usuario);
-             }else{
-                 throw new RuntimeException("Usuário não existe");
-             }
-        }
-        return usuario;
+    public Usuario alterar(Usuario usuario){
+        validarExistenciaId(usuario.getId());
+        return repository.save(usuario);
     }
 
 
@@ -44,5 +41,18 @@ public class UsuarioService {
         log.info("End - Excluindo user ID {} ", id);
     }
 
+    public Usuario buscarPorEmail(String email){
+        var usuario = repository.buscarPorEmail(email);
+        if(Objects.isNull(usuario))
+            throw new RuntimeException("Email não localizado " +email);
+
+        return usuario;
+    }
+
+    private void validarExistenciaId(Integer id){
+        if(Objects.isNull(id) || !repository.existsById(id)){
+            throw new RuntimeException("Usuário não existe para o id "+id);
+        }
+    }
 
 }
