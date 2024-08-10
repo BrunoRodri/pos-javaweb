@@ -24,4 +24,7 @@ public class Usuario {
 
     private String nome;
 
+    @ManyToOne
+    private Endereco endereco;
+
 }

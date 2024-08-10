@@ -1,10 +1,13 @@
 package br.edu.unipe.api.controller;
 
 import br.edu.unipe.api.model.Usuario;
+import br.edu.unipe.api.model.dto.UsuarioDTO;
 import br.edu.unipe.api.repository.UsuarioRepository;
 import br.edu.unipe.api.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,11 +28,11 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public Usuario  consultarPorId(@PathVariable int id){
+    public UsuarioDTO  consultarPorId(@PathVariable int id){
         log.info("Inicio - Consulta usuário id {} " , id);
-        var usuario = service.consultar(id);
+        var usuarioDTO = service.consultar(id);
         log.info("Fim  - Consulta usuário id {} " , id);
-        return usuario;
+        return usuarioDTO;
     }
 
     @GetMapping("/email/{email}")
@@ -39,9 +42,9 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public Usuario salvar(@RequestBody Usuario usuario){
-        usuario = service.salvar(usuario);
-        return usuario;
+    public ResponseEntity<UsuarioDTO> salvar(@RequestBody UsuarioDTO usuarioDTO){
+        usuarioDTO = service.salvar(usuarioDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTO);
     }
 
     @PutMapping
@@ -50,8 +53,9 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUsuario(@PathVariable Integer id){
+    public ResponseEntity<Void> deleteUsuario(@PathVariable Integer id){
         service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
